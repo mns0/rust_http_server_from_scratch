@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+#[derive(Debug)]
 pub enum Method {
     GET,
     DELETE,
@@ -13,7 +14,7 @@ pub enum Method {
 }
 
 impl FromStr for Method {
-    type Err = String;
+    type Err = MethodError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
@@ -26,7 +27,7 @@ impl FromStr for Method {
             "OPTIONS" => Ok(Self::OPTIONS),
             "TRACE" => Ok(Self::TRACE),
             "PATCH" => Ok(Self::PATCH),
-            _ => Err(String::from("Error!")),
+            _ => Err(MethodError),
         }
     }
 }
