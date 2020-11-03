@@ -1,6 +1,5 @@
 use crate::http::Request;
 use std::convert::TryFrom;
-use std::convert::TryInto;
 use std::io::Read;
 use std::net::TcpListener;
 
@@ -28,7 +27,9 @@ impl Server {
                         Ok(_) => {
                             println!("Recieved a request: {:?}", String::from_utf8_lossy(&buffer));
                             match Request::try_from(&buffer[..]) {
-                                Ok(request) => dbg!(request),
+                                Ok(request) => {
+                                    dbg!(request);
+                                }
                                 Err(e) => println!("Failed to parse a request: {}", e),
                             };
                         }
