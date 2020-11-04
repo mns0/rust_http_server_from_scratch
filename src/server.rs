@@ -1,6 +1,6 @@
 use crate::http::{ParseError, Request, Response, StatusCode};
 use std::convert::TryFrom;
-use std::io::{Read, Write};
+use std::io::Read;
 use std::net::TcpListener;
 
 pub trait Handler {
@@ -17,24 +17,23 @@ pub struct Server {
 }
 
 impl Server {
-    //Self and server are the same
     pub fn new(addr: String) -> Self {
         Self { addr }
     }
 
-    pub fn run(&self, mut handler: impl Handler) {
+    pub fn run(self, mut handler: impl Handler) {
         println!("Listening on {}", self.addr);
 
-        let _listener = TcpListener::bind(&self.addr).unwrap();
-        //infinite loop! :) same as while true
+        let listener = TcpListener::bind(&self.addr).unwrap();
 
         loop {
-            match _listener.accept() {
+            match listener.accept() {
                 Ok((mut stream, _)) => {
                     let mut buffer = [0; 1024];
                     match stream.read(&mut buffer) {
                         Ok(_) => {
-                            println!("Recieved a request: {:?}", String::from_utf8_lossy(&buffer));
+                            println!("Received a request: {}", String::from_utf8_lossy(&buffer));
+
                             let response = match Request::try_from(&buffer[..]) {
                                 Ok(request) => handler.handle_request(&request),
                                 Err(e) => handler.handle_bad_request(&e),
