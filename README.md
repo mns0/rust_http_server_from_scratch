@@ -1,1 +1,3 @@
-# rust_http_server_from_scratch
+# Simple HTTP 1.1 server written in rust. 
+
+
